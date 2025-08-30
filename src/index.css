@@ -1,0 +1,788 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* نظام الألوان المريح للعين - داكن ومهدئ */
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    /* نظام ألوان فاتح ومريح */
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+
+    --brand: 222.2 47.4% 11.2%;
+    --brand-dark: 222.2 47.4% 8.2%;
+    --brand-light: 222.2 47.4% 14.2%;
+    --brand-accent: 221.2 83.2% 53.3%;
+
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222.2 84% 4.9%;
+
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96%;
+    --accent-foreground: 222.2 84% 4.9%;
+
+    --success: 142 76% 36%;
+    --success-foreground: 355.7 100% 97.3%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+
+    --radius: 0.75rem;
+
+    /* ألوان متدرجة فاتحة */
+    --gradient-start: 210 40% 98%;
+    --gradient-middle: 210 40% 96%;
+    --gradient-end: 210 40% 94%;
+
+    /* ألوان الشريط الجانبي */
+    --sidebar-background: 210 40% 98%;
+    --sidebar-foreground: 222.2 84% 4.9%;
+    --sidebar-primary: 222.2 47.4% 11.2%;
+    --sidebar-primary-foreground: 210 40% 98%;
+    --sidebar-accent: 210 40% 96%;
+    --sidebar-accent-foreground: 222.2 84% 4.9%;
+    --sidebar-border: 214.3 31.8% 91.4%;
+    --sidebar-ring: 221.2 83.2% 53.3%;
+  }
+
+  .dark {
+    --background: 0 0% 9%;
+    --foreground: 0 0% 95%;
+    --card: 0 0% 12%;
+    --card-foreground: 0 0% 95%;
+    --popover: 0 0% 12%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 220 13% 18%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 220 13% 16%;
+    --secondary-foreground: 0 0% 95%;
+    --muted: 220 13% 14%;
+    --muted-foreground: 220 9% 60%;
+    --accent: 220 13% 18%;
+    --accent-foreground: 0 0% 95%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 95%;
+    --border: 220 13% 20%;
+    --input: 220 13% 20%;
+    --ring: 217 91% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-cairo;
+    direction: rtl;
+    text-align: right;
+  }
+
+  html {
+    direction: rtl;
+    text-align: right;
+  }
+
+  /* تحسين اتجاه النصوص العربية */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  span,
+  div,
+  label,
+  input,
+  textarea,
+  select {
+    direction: rtl;
+    text-align: right;
+  }
+
+  /* تحسين اتجاه الجداول */
+  table {
+    direction: rtl;
+  }
+
+  th,
+  td {
+    text-align: right;
+  }
+
+  /* تحسين اتجاه النماذج */
+  form {
+    direction: rtl;
+  }
+
+  /* تحسين اتجاه القوائم */
+  ul,
+  ol {
+    direction: rtl;
+  }
+
+  /* تحسين اتجاه الأزرار */
+  button {
+    direction: rtl;
+  }
+}
+
+/* أنماط الطباعة للفواتير */
+@media print {
+  @page {
+    size: A4;
+    margin: 1cm;
+  }
+
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .print\\:hidden {
+    display: none !important;
+  }
+
+  .print\\:shadow-none {
+    box-shadow: none !important;
+  }
+
+  .print\\:border-0 {
+    border: none !important;
+  }
+
+  .print\\:p-0 {
+    padding: 0 !important;
+  }
+
+  /* تحسين ألوان الطباعة */
+  .bg-amber-50 {
+    background-color: #fffbeb !important;
+  }
+
+  .bg-amber-100 {
+    background-color: #fef3c7 !important;
+  }
+
+  .bg-amber-600 {
+    background-color: #d97706 !important;
+  }
+
+  .text-amber-600 {
+    color: #d97706 !important;
+  }
+
+  .text-amber-700 {
+    color: #b45309 !important;
+  }
+
+  .text-amber-800 {
+    color: #92400e !important;
+  }
+
+  .border-amber-200 {
+    border-color: #fde68a !important;
+  }
+
+  .border-amber-300 {
+    border-color: #fcd34d !important;
+  }
+
+  .border-amber-400 {
+    border-color: #fbbf24 !important;
+  }
+
+  .border-amber-500 {
+    border-color: #f59e0b !important;
+  }
+
+  .border-amber-600 {
+    border-color: #d97706 !important;
+  }
+}
+
+/* مكونات محسنة - ألوان داكنة ومريحة */
+@layer components {
+  .btn-brand {
+    @apply bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-4 sm:px-8 py-2 sm:py-3 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 text-sm sm:text-base;
+  }
+
+  .btn-brand-outline {
+    @apply border-2 border-border text-foreground hover:bg-accent hover:text-accent-foreground font-semibold px-4 sm:px-8 py-2 sm:py-3 rounded-xl transition-all duration-300 text-sm sm:text-base;
+  }
+
+  .btn-success {
+    @apply bg-success hover:bg-success/90 text-success-foreground font-semibold px-4 sm:px-6 py-2 rounded-lg transition-all duration-300 text-sm sm:text-base;
+  }
+
+  .btn-accent {
+    @apply bg-accent hover:bg-accent/90 text-accent-foreground font-semibold px-4 sm:px-6 py-2 rounded-lg transition-all duration-300 text-sm sm:text-base;
+  }
+
+  .btn-warning {
+    @apply bg-warning hover:bg-warning/90 text-warning-foreground font-semibold px-4 sm:px-6 py-2 rounded-lg transition-all duration-300 text-sm sm:text-base;
+  }
+
+  .card-brand {
+    @apply bg-card border border-border shadow-xl rounded-xl sm:rounded-2xl backdrop-blur-sm;
+  }
+
+  .card-elevated {
+    @apply bg-card shadow-2xl rounded-xl sm:rounded-2xl border border-border hover:shadow-2xl transition-all duration-300;
+  }
+
+  .card-gradient {
+    @apply bg-gradient-to-br from-background via-card to-background shadow-lg hover:shadow-xl transition-all duration-300;
+  }
+
+  .text-brand {
+    color: hsl(var(--brand));
+  }
+
+  .text-brand-dark {
+    color: hsl(var(--brand-dark));
+  }
+
+  .border-brand {
+    border-color: hsl(var(--brand));
+  }
+
+  .bg-brand-gradient {
+    @apply bg-gradient-to-br from-background via-card to-background;
+  }
+
+  .hero-gradient {
+    @apply bg-gradient-to-br from-background via-card to-background;
+  }
+
+  .nav-glass {
+    @apply bg-background/95 backdrop-blur-md border-b border-border;
+  }
+
+  .sidebar-gradient {
+    @apply bg-gradient-to-b from-background via-card to-background;
+  }
+
+  .responsive-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6;
+  }
+
+  .mobile-card {
+    @apply p-4 sm:p-6 rounded-xl bg-slate-800 shadow-lg border border-slate-700 hover:shadow-xl transition-all duration-300;
+  }
+
+  .feature-card {
+    @apply bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 group;
+  }
+
+  .feature-icon {
+    @apply w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300;
+  }
+}
+
+/* أدوات مساعدة محسنة */
+@layer utilities {
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+
+  .animate-fade-in-mobile {
+    animation: fadeInMobile 0.5s ease-out;
+  }
+
+  .animate-bounce-slow {
+    animation: bounce 3s ease-in-out infinite;
+  }
+
+  .animate-pulse-slow {
+    animation: pulse 3s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  @keyframes glow {
+    from {
+      box-shadow: 0 0 20px hsl(217 91% 60% / 0.3);
+    }
+    to {
+      box-shadow: 0 0 30px hsl(217 91% 60% / 0.6);
+    }
+  }
+
+  @keyframes fadeInMobile {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .mobile-padding {
+    @apply px-4 sm:px-6 lg:px-8;
+  }
+
+  .mobile-text {
+    @apply text-sm sm:text-base lg:text-lg;
+  }
+
+  .mobile-heading {
+    @apply text-xl sm:text-2xl lg:text-3xl xl:text-4xl;
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent;
+  }
+
+  .soft-colors {
+    @apply text-muted-foreground;
+  }
+
+  .gentle-bg {
+    @apply bg-card;
+  }
+
+  .calm-border {
+    @apply border-border;
+  }
+}
+
+@layer components {
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* إصلاح ألوان النصوص في الوضع النهاري */
+  .text-slate-100 {
+    color: rgb(241 245 249) !important;
+  }
+
+  .text-slate-300 {
+    color: rgb(203 213 225) !important;
+  }
+
+  .text-slate-400 {
+    color: rgb(148 163 184) !important;
+  }
+
+  .text-slate-500 {
+    color: rgb(100 116 139) !important;
+  }
+
+  .text-slate-600 {
+    color: rgb(71 85 105) !important;
+  }
+
+  .text-slate-700 {
+    color: rgb(51 65 85) !important;
+  }
+
+  .text-slate-800 {
+    color: rgb(30 41 59) !important;
+  }
+
+  .text-slate-900 {
+    color: rgb(15 23 42) !important;
+  }
+
+  /* تحسين الألوان للوضع النهاري */
+  .text-foreground {
+    color: hsl(var(--foreground)) !important;
+  }
+
+  .text-muted-foreground {
+    color: hsl(var(--muted-foreground)) !important;
+  }
+
+  /* تحسين ألوان البطاقات في الوضع النهاري */
+  .bg-card {
+    background-color: hsl(var(--card));
+  }
+
+  .text-card-foreground {
+    color: hsl(var(--card-foreground));
+  }
+
+  /* تحسين ألوان النصوص في البطاقات */
+  .card h1,
+  .card h2,
+  .card h3,
+  .card h4,
+  .card h5,
+  .card h6 {
+    color: hsl(var(--foreground)) !important;
+  }
+
+  .card p {
+    color: hsl(var(--muted-foreground)) !important;
+  }
+
+  /* تحسين ألوان النصوص في القوائم */
+  .list-item {
+    color: hsl(var(--foreground)) !important;
+  }
+
+  /* تحسين ألوان الأزرار */
+  .btn-primary {
+    background-color: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+  }
+
+  .btn-secondary {
+    background-color: hsl(var(--secondary));
+    color: hsl(var(--secondary-foreground));
+  }
+
+  /* تحسين ألوان الحقول */
+  .input {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    border-color: hsl(var(--border));
+  }
+
+  /* تحسين ألوان القوائم المنسدلة */
+  .select {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+  }
+
+  /* إصلاح ألوان الإجراءات السريعة في الوضع النهاري */
+  .quick-actions-title {
+    color: rgb(15 23 42) !important;
+  }
+
+  .quick-actions-description {
+    color: rgb(71 85 105) !important;
+  }
+
+  .hero-description {
+    color: rgb(71 85 105) !important;
+  }
+
+  /* إصلاح محاذاة النصوص في الصفحة الرئيسية */
+  .hero-section h1,
+  .hero-section h2,
+  .hero-section h3,
+  .hero-section p,
+  .hero-section .badge {
+    text-align: center !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  /* إصلاح محاذاة جميع النصوص في الصفحة الرئيسية */
+  .hero-section {
+    text-align: center !important;
+  }
+
+  .hero-section * {
+    text-align: center !important;
+  }
+
+  /* إصلاح محاذاة العنوان الرئيسي */
+  .hero-title {
+    text-align: center !important;
+    display: block !important;
+    width: 100% !important;
+  }
+
+  /* إصلاح محاذاة الوصف */
+  .hero-subtitle {
+    text-align: center !important;
+    display: block !important;
+    width: 100% !important;
+  }
+
+  /* إصلاح محاذاة الشارات */
+  .hero-badges {
+    justify-content: center !important;
+    text-align: center !important;
+  }
+
+  /* إصلاح محاذاة لوحة التحكم */
+  .dashboard-header {
+    text-align: center !important;
+  }
+
+  .dashboard-title {
+    text-align: center !important;
+    display: block !important;
+    width: 100% !important;
+  }
+
+  .dashboard-description {
+    text-align: center !important;
+    display: block !important;
+    width: 100% !important;
+  }
+
+  /* تحسين ألوان الجداول */
+  .table th {
+    color: hsl(var(--foreground)) !important;
+  }
+
+  .table td {
+    color: hsl(var(--muted-foreground)) !important;
+  }
+
+  /* تحسين ألوان البطاقات الإحصائية */
+  .stats-card {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--card)) 0%,
+      hsl(var(--muted)) 100%
+    );
+    border: 1px solid hsl(var(--border));
+  }
+
+  .stats-card h3 {
+    color: hsl(var(--foreground)) !important;
+  }
+
+  .stats-card p {
+    color: hsl(var(--muted-foreground)) !important;
+  }
+
+  /* تحسين ألوان الشارات */
+  .badge {
+    background-color: hsl(var(--secondary));
+    color: hsl(var(--secondary-foreground));
+  }
+
+  /* تحسين ألوان الروابط */
+  a {
+    color: hsl(var(--primary));
+  }
+
+  a:hover {
+    color: hsl(var(--primary) / 0.8);
+  }
+
+  /* تحسين ألوان النصوص في الهيدر */
+  .header h1,
+  .header h2,
+  .header h3 {
+    color: hsl(var(--foreground)) !important;
+  }
+
+  .header p {
+    color: hsl(var(--muted-foreground)) !important;
+  }
+
+  /* تحسين ألوان النصوص في الفوتر */
+  .footer {
+    color: hsl(var(--muted-foreground));
+  }
+
+  /* تحسين ألوان النصوص في القوائم الجانبية */
+  .sidebar {
+    background-color: hsl(var(--card));
+  }
+
+  .sidebar a {
+    color: hsl(var(--muted-foreground));
+  }
+
+  .sidebar a:hover {
+    color: hsl(var(--foreground));
+    background-color: hsl(var(--accent));
+  }
+
+  /* تحسين ألوان النصوص في التبويبات */
+  .tabs-trigger {
+    color: hsl(var(--muted-foreground));
+  }
+
+  .tabs-trigger[data-state="active"] {
+    color: hsl(var(--foreground));
+  }
+
+  /* تحسين ألوان النصوص في النماذج */
+  .form-label {
+    color: hsl(var(--foreground)) !important;
+  }
+
+  .form-description {
+    color: hsl(var(--muted-foreground)) !important;
+  }
+
+  /* تحسين ألوان النصوص في التنبيهات */
+  .alert {
+    background-color: hsl(var(--card));
+    border-color: hsl(var(--border));
+  }
+
+  .alert-title {
+    color: hsl(var(--foreground)) !important;
+  }
+
+  .alert-description {
+    color: hsl(var(--muted-foreground)) !important;
+  }
+
+  /* إصلاح ألوان النصوص في الوضع النهاري */
+  .dark .text-slate-100 {
+    color: rgb(241 245 249) !important;
+  }
+
+  .dark .text-slate-300 {
+    color: rgb(203 213 225) !important;
+  }
+
+  .dark .text-slate-400 {
+    color: rgb(148 163 184) !important;
+  }
+
+  .dark .text-slate-500 {
+    color: rgb(100 116 139) !important;
+  }
+
+  .dark .text-slate-600 {
+    color: rgb(71 85 105) !important;
+  }
+
+  .dark .text-slate-700 {
+    color: rgb(51 65 85) !important;
+  }
+
+  .dark .text-slate-800 {
+    color: rgb(30 41 59) !important;
+  }
+
+  .dark .text-slate-900 {
+    color: rgb(15 23 42) !important;
+  }
+}
+
+/* أنماط الطباعة للفواتير */
+@media print {
+  @page {
+    size: A4;
+    margin: 1cm;
+  }
+
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .print\\:hidden {
+    display: none !important;
+  }
+
+  .print\\:shadow-none {
+    box-shadow: none !important;
+  }
+
+  .print\\:border-0 {
+    border: none !important;
+  }
+
+  .print\\:p-0 {
+    padding: 0 !important;
+  }
+
+  /* تحسين ألوان الطباعة */
+  .bg-amber-50 {
+    background-color: #fffbeb !important;
+  }
+
+  .bg-amber-100 {
+    background-color: #fef3c7 !important;
+  }
+
+  .bg-amber-600 {
+    background-color: #d97706 !important;
+  }
+
+  .text-amber-600 {
+    color: #d97706 !important;
+  }
+
+  .text-amber-700 {
+    color: #b45309 !important;
+  }
+
+  .text-amber-800 {
+    color: #92400e !important;
+  }
+
+  .border-amber-200 {
+    border-color: #fde68a !important;
+  }
+
+  .border-amber-300 {
+    border-color: #fcd34d !important;
+  }
+
+  .border-amber-400 {
+    border-color: #fbbf24 !important;
+  }
+
+  .border-amber-500 {
+    border-color: #f59e0b !important;
+  }
+
+  .border-amber-600 {
+    border-color: #d97706 !important;
+  }
+}

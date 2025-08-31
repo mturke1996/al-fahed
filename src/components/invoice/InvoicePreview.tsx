@@ -15,7 +15,7 @@ import {
   Globe,
 } from "lucide-react";
 import html2pdf from "html2pdf.js";
-import QRCode from "react-qr-code"; // npm install react-qr-code
+import QRCode from "react-qr-code"; // 📌 npm install react-qr-code
 
 interface InvoicePreviewProps {
   isOpen: boolean;
@@ -89,27 +89,27 @@ export function InvoicePreview({
               className="bg-white text-gray-900 p-8 print:p-4 mx-auto"
               style={{ minHeight: "29.7cm", width: "21cm" }}
             >
-              {/* Header with Logo + Info */}
+              {/* ===== HEADER ===== */}
               <div className="flex justify-between items-start mb-8 border-b-4 border-amber-600 pb-6">
                 {/* Company Info */}
                 <div className="flex items-center gap-6">
                   <img
                     src="/company-footer-logo.png"
                     alt="logo"
-                    className="w-24 h-24 object-contain drop-shadow-md"
+                    className="w-20 h-20 object-contain drop-shadow-md"
                   />
                   <div>
-                    <h1 className="text-5xl font-extrabold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
+                    <h1 className="text-4xl font-extrabold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
                       شركة الفهد
                     </h1>
                     <p className="text-lg text-amber-700 font-semibold">
                       للاستشارات الهندسية
                     </p>
-                    <div className="flex items-center gap-2 mt-2 text-sm text-gray-600">
+                    <div className="flex items-center gap-2 mt-1 text-sm text-gray-600">
                       <MapPin className="h-4 w-4 text-amber-500" />
                       <span>طرابلس، ليبيا</span>
                     </div>
-                    <div className="flex items-center gap-4 mt-2 text-sm text-gray-600">
+                    <div className="flex items-center gap-4 mt-1 text-sm text-gray-600">
                       <div className="flex items-center gap-2">
                         <Phone className="h-4 w-4 text-amber-500" />
                         <span>+218 21 XXX XXXX</span>
@@ -124,10 +124,10 @@ export function InvoicePreview({
 
                 {/* Invoice Meta */}
                 <div className="text-right">
-                  <div className="text-6xl font-bold text-amber-700 mb-4">
+                  <div className="text-5xl font-bold text-amber-700 mb-4">
                     فاتورة
                   </div>
-                  <div className="bg-gradient-to-r from-amber-50 to-orange-50 p-5 rounded-xl border border-amber-200 shadow-sm">
+                  <div className="bg-gradient-to-r from-amber-50 to-orange-50 p-4 rounded-xl border border-amber-200 shadow-sm">
                     <div className="mb-2">
                       رقم الفاتورة:{" "}
                       <span className="font-bold text-xl text-amber-700">
@@ -144,10 +144,10 @@ export function InvoicePreview({
                 </div>
               </div>
 
-              {/* Customer & Sale Info */}
+              {/* ===== Customer & Sale Info ===== */}
               <div className="grid grid-cols-2 gap-8 mb-8">
                 <div className="bg-amber-50 p-5 rounded-xl border shadow-sm">
-                  <h3 className="text-xl font-bold text-amber-800 mb-3 flex items-center gap-2">
+                  <h3 className="text-lg font-bold text-amber-800 mb-3 flex items-center gap-2">
                     <User className="h-5 w-5 text-amber-600" />
                     معلومات العميل
                   </h3>
@@ -160,7 +160,7 @@ export function InvoicePreview({
                   {customerData?.address && <p>{customerData.address}</p>}
                 </div>
                 <div className="bg-orange-50 p-5 rounded-xl border shadow-sm">
-                  <h3 className="text-xl font-bold text-orange-800 mb-3 flex items-center gap-2">
+                  <h3 className="text-lg font-bold text-orange-800 mb-3 flex items-center gap-2">
                     <Receipt className="h-5 w-5 text-orange-600" />
                     تفاصيل البيع
                   </h3>
@@ -174,9 +174,9 @@ export function InvoicePreview({
                 </div>
               </div>
 
-              {/* Products Table */}
+              {/* ===== Products Table ===== */}
               <div className="mb-8">
-                <h3 className="text-2xl font-bold text-amber-700 mb-6 flex items-center gap-2">
+                <h3 className="text-xl font-bold text-amber-700 mb-4 flex items-center gap-2">
                   <Package className="h-6 w-6 text-amber-600" />
                   المنتجات والخدمات
                 </h3>
@@ -216,9 +216,9 @@ export function InvoicePreview({
                 </table>
               </div>
 
-              {/* Totals */}
+              {/* ===== Totals ===== */}
               <div className="flex justify-end mb-8">
-                <div className="w-96 bg-gradient-to-br from-amber-50 to-orange-50 p-6 rounded-xl border shadow">
+                <div className="w-80 bg-gradient-to-br from-amber-50 to-orange-50 p-6 rounded-xl border shadow">
                   <p className="flex justify-between">
                     <span>المجموع الفرعي:</span>
                     <span>{totals.subtotal.toLocaleString()} د.ل</span>
@@ -235,14 +235,14 @@ export function InvoicePreview({
                       <span>{totals.taxAmount.toLocaleString()} د.ل</span>
                     </p>
                   )}
-                  <div className="border-t mt-3 pt-3 font-bold text-xl text-amber-800 flex justify-between">
+                  <div className="border-t mt-3 pt-3 font-bold text-lg text-amber-800 flex justify-between">
                     <span>الإجمالي:</span>
                     <span>{totals.total.toLocaleString()} د.ل</span>
                   </div>
                 </div>
               </div>
 
-              {/* Notes */}
+              {/* ===== Notes ===== */}
               {saleConfig?.notes && (
                 <div className="mb-6">
                   <h4 className="font-bold text-amber-800 mb-2 flex items-center gap-2">
@@ -255,8 +255,8 @@ export function InvoicePreview({
                 </div>
               )}
 
-              {/* Footer */}
-              <div className="mt-12 border-t pt-6">
+              {/* ===== Footer ===== */}
+              <div className="mt-12 border-t pt-4">
                 <div className="flex flex-col md:flex-row items-center justify-between text-xs md:text-sm text-gray-600">
                   {/* Left: Logo */}
                   <div className="flex items-center gap-2 mb-4 md:mb-0">
@@ -276,7 +276,7 @@ export function InvoicePreview({
                   </div>
 
                   {/* Right: Contact + QR */}
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-3">
                     <div className="text-right space-y-1 leading-snug">
                       <p>طرابلس، ليبيا</p>
                       <p>📞 +218 21 XXX XXXX</p>

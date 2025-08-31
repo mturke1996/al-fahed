@@ -1,7 +1,6 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
-import { Badge } from "../ui/badge";
 import {
   X,
   Printer,
@@ -9,13 +8,14 @@ import {
   Mail,
   Phone,
   MapPin,
-  Building,
   Receipt,
   Package,
   User,
   FileText,
+  Globe,
 } from "lucide-react";
 import html2pdf from "html2pdf.js";
+import QRCode from "react-qr-code"; // npm install react-qr-code
 
 interface InvoicePreviewProps {
   isOpen: boolean;
@@ -96,20 +96,20 @@ export function InvoicePreview({
                   <img
                     src="/company-footer-logo.png"
                     alt="logo"
-                    className="w-24 h-24 object-contain"
+                    className="w-24 h-24 object-contain drop-shadow-md"
                   />
                   <div>
-                    <h1 className="text-4xl font-extrabold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
+                    <h1 className="text-5xl font-extrabold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
                       شركة الفهد
                     </h1>
                     <p className="text-lg text-amber-700 font-semibold">
                       للاستشارات الهندسية
                     </p>
-                    <div className="flex items-center gap-3 mt-2 text-sm text-gray-600">
+                    <div className="flex items-center gap-2 mt-2 text-sm text-gray-600">
                       <MapPin className="h-4 w-4 text-amber-500" />
                       <span>طرابلس، ليبيا</span>
                     </div>
-                    <div className="flex items-center gap-6 mt-2 text-sm text-gray-600">
+                    <div className="flex items-center gap-4 mt-2 text-sm text-gray-600">
                       <div className="flex items-center gap-2">
                         <Phone className="h-4 w-4 text-amber-500" />
                         <span>+218 21 XXX XXXX</span>
@@ -124,17 +124,17 @@ export function InvoicePreview({
 
                 {/* Invoice Meta */}
                 <div className="text-right">
-                  <div className="text-5xl font-bold text-amber-700 mb-4">
+                  <div className="text-6xl font-bold text-amber-700 mb-4">
                     فاتورة
                   </div>
                   <div className="bg-gradient-to-r from-amber-50 to-orange-50 p-5 rounded-xl border border-amber-200 shadow-sm">
-                    <div className="text-base mb-2">
+                    <div className="mb-2">
                       رقم الفاتورة:{" "}
                       <span className="font-bold text-xl text-amber-700">
                         {saleData?.id?.slice(-8) || "INV-001"}
                       </span>
                     </div>
-                    <div className="text-base">
+                    <div>
                       تاريخ الإصدار:{" "}
                       <span className="font-bold text-xl text-amber-700">
                         {formatDate(new Date().toISOString())}
@@ -146,7 +146,7 @@ export function InvoicePreview({
 
               {/* Customer & Sale Info */}
               <div className="grid grid-cols-2 gap-8 mb-8">
-                <div className="bg-amber-50 p-5 rounded-xl border border-amber-200 shadow-sm">
+                <div className="bg-amber-50 p-5 rounded-xl border shadow-sm">
                   <h3 className="text-xl font-bold text-amber-800 mb-3 flex items-center gap-2">
                     <User className="h-5 w-5 text-amber-600" />
                     معلومات العميل
@@ -159,7 +159,7 @@ export function InvoicePreview({
                   {customerData?.phone && <p>{customerData.phone}</p>}
                   {customerData?.address && <p>{customerData.address}</p>}
                 </div>
-                <div className="bg-orange-50 p-5 rounded-xl border border-orange-200 shadow-sm">
+                <div className="bg-orange-50 p-5 rounded-xl border shadow-sm">
                   <h3 className="text-xl font-bold text-orange-800 mb-3 flex items-center gap-2">
                     <Receipt className="h-5 w-5 text-orange-600" />
                     تفاصيل البيع
@@ -275,12 +275,19 @@ export function InvoicePreview({
                     شكراً لثقتكم بنا
                   </div>
 
-                  {/* Right: Contact */}
-                  <div className="text-right space-y-1 leading-snug">
-                    <p>طرابلس، ليبيا</p>
-                    <p>📞 +218 21 XXX XXXX</p>
-                    <p>✉ info@alfahed.ly</p>
-                    <p>🌍 www.alfahed.ly</p>
+                  {/* Right: Contact + QR */}
+                  <div className="flex items-center gap-4">
+                    <div className="text-right space-y-1 leading-snug">
+                      <p>طرابلس، ليبيا</p>
+                      <p>📞 +218 21 XXX XXXX</p>
+                      <p>✉ info@alfahed.ly</p>
+                      <p className="flex items-center gap-1 justify-end">
+                        <Globe className="h-3 w-3 text-amber-600" /> www.alfahed.ly
+                      </p>
+                    </div>
+                    <div className="bg-white p-1 rounded shadow">
+                      <QRCode value="https://www.alfahed.ly" size={50} />
+                    </div>
                   </div>
                 </div>
               </div>

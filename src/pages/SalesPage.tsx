@@ -333,12 +333,6 @@ export default function SalesPage() {
   const selectedCustomerData = customers.find((c) => c.id === selectedCustomer);
   const { subtotal, discount, taxAmount, total } = calculateTotal();
 
-  // طباعة معلومات التصحيح
-  console.log("العملاء المتاحون:", customers);
-  console.log("العميل المختار:", selectedCustomer);
-  console.log("بيانات العميل المختار:", selectedCustomerData);
-  console.log("المنتجات المختارة:", selectedProducts);
-
   const openInvoicePreview = () => {
     if (!selectedCustomer) {
       alert("يرجى اختيار العميل أولاً");

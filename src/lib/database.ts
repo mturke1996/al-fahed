@@ -290,7 +290,6 @@ class SupabaseDatabase {
     product: Omit<Product, "id" | "createdAt" | "updatedAt" | "category">
   ): Promise<Product | null> {
     try {
-      console.log(`محاولة إضافة المنتج: ${product.name}`);
       const { data, error } = await supabase
         .from("products")
         .insert({
@@ -318,7 +317,6 @@ class SupabaseDatabase {
       }
 
       if (data) {
-        console.log(`تم إضافة المنتج ${product.name} بنجاح`);
         return {
           ...data,
           categoryId: data.category_id,
@@ -423,16 +421,14 @@ class SupabaseDatabase {
     customer: Omit<Customer, "id" | "createdAt" | "updatedAt">
   ): Promise<Customer | null> {
     try {
-      console.log(`محاولة إضافة العميل: ${customer.name}`);
       const { data, error } = await supabase
         .from("customers")
         .insert({
           name: customer.name,
           email: customer.email,
           phone: customer.phone,
-          address: customer.address,
           company: customer.company,
-          tax_number: customer.taxNumber,
+          address: customer.address,
         })
         .select()
         .single();
@@ -443,10 +439,8 @@ class SupabaseDatabase {
       }
 
       if (data) {
-        console.log(`تم إضافة العميل ${customer.name} بنجاح`);
         return {
           ...data,
-          taxNumber: data.tax_number,
           createdAt: new Date(data.created_at),
           updatedAt: new Date(data.updated_at),
         };

@@ -11,8 +11,10 @@ import {
   Calendar,
   Target,
 } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export function DashboardStats() {
+  const isMobile = useIsMobile();
   const [stats, setStats] = useState({
     totalSales: 0,
     totalRevenue: 0,
@@ -122,39 +124,62 @@ export function DashboardStats() {
   ];
 
   return (
-    <div className="mb-12">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {statsCards.map((stat, index) => {
-          const IconComponent = stat.icon;
-          return (
-            <Card
-              key={index}
-              className="hover:shadow-lg transition-all duration-300"
-            >
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-foreground">
-                  {stat.title}
-                </CardTitle>
-                <div className={`p-2 rounded-lg ${stat.color}`}>
-                  <IconComponent className="h-4 w-4 text-white" />
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-foreground mb-2">
-                  {stat.value}
-                </div>
-                <p className="text-xs text-muted-foreground mb-1">
-                  {stat.description}
-                </p>
-                <div className="flex items-center text-xs text-green-600">
-                  <TrendingUp className="h-3 w-3 mr-1" />
-                  {stat.change}
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
+    <div className={`grid gap-4 mb-8 ${isMobile ? 'grid-cols-2 gap-3' : 'grid-cols-2 md:grid-cols-4 gap-4'}`}>
+      <Card className="stats-card">
+        <CardHeader className={`flex flex-row items-center justify-between space-y-0 pb-2 ${isMobile ? 'pb-1' : 'pb-2'}`}>
+          <CardTitle className={`font-medium ${isMobile ? 'text-xs' : 'text-sm'}`}>
+            إجمالي المبيعات
+          </CardTitle>
+          <TrendingUp className={`text-muted-foreground ${isMobile ? 'h-3 w-3' : 'h-4 w-4'}`} />
+        </CardHeader>
+        <CardContent>
+          <div className={`font-bold ${isMobile ? 'text-lg' : 'text-2xl'}`}>1,234</div>
+          <p className={`text-muted-foreground ${isMobile ? 'text-xs' : 'text-xs'}`}>عملية بيع</p>
+        </CardContent>
+      </Card>
+
+      <Card className="stats-card">
+        <CardHeader className={`flex flex-row items-center justify-between space-y-0 pb-2 ${isMobile ? 'pb-1' : 'pb-2'}`}>
+          <CardTitle className={`font-medium ${isMobile ? 'text-xs' : 'text-sm'}`}>
+            إجمالي الإيرادات
+          </CardTitle>
+          <DollarSign className={`text-muted-foreground ${isMobile ? 'h-3 w-3' : 'h-4 w-4'}`} />
+        </CardHeader>
+        <CardContent>
+          <div className={`font-bold ${isMobile ? 'text-lg' : 'text-2xl'}`}>
+            45,678
+          </div>
+          <p className={`text-muted-foreground ${isMobile ? 'text-xs' : 'text-xs'}`}>دينار ليبي</p>
+        </CardContent>
+      </Card>
+
+      <Card className="stats-card">
+        <CardHeader className={`flex flex-row items-center justify-between space-y-0 pb-2 ${isMobile ? 'pb-1' : 'pb-2'}`}>
+          <CardTitle className={`font-medium ${isMobile ? 'text-xs' : 'text-sm'}`}>
+            مبيعات اليوم
+          </CardTitle>
+          <Calendar className={`text-muted-foreground ${isMobile ? 'h-3 w-3' : 'h-4 w-4'}`} />
+        </CardHeader>
+        <CardContent>
+          <div className={`font-bold ${isMobile ? 'text-lg' : 'text-2xl'}`}>23</div>
+          <p className={`text-muted-foreground ${isMobile ? 'text-xs' : 'text-xs'}`}>عملية بيع</p>
+        </CardContent>
+      </Card>
+
+      <Card className="stats-card">
+        <CardHeader className={`flex flex-row items-center justify-between space-y-0 pb-2 ${isMobile ? 'pb-1' : 'pb-2'}`}>
+          <CardTitle className={`font-medium ${isMobile ? 'text-xs' : 'text-sm'}`}>
+            الإيرادات الشهرية
+          </CardTitle>
+          <TrendingUp className={`text-muted-foreground ${isMobile ? 'h-3 w-3' : 'h-4 w-4'}`} />
+        </CardHeader>
+        <CardContent>
+          <div className={`font-bold ${isMobile ? 'text-lg' : 'text-2xl'}`}>
+            12,345
+          </div>
+          <p className={`text-muted-foreground ${isMobile ? 'text-xs' : 'text-xs'}`}>دينار ليبي</p>
+        </CardContent>
+      </Card>
     </div>
   );
 }

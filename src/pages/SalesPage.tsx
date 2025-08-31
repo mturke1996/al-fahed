@@ -63,8 +63,11 @@ import {
   HardHat,
   Wrench,
 } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export default function SalesPage() {
+  const isMobile = useIsMobile();
+
   const [products, setProducts] = useState<Product[]>([]);
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [sales, setSales] = useState<Sale[]>([]);
@@ -75,7 +78,21 @@ export default function SalesPage() {
   >([]);
   const [showCreateCustomer, setShowCreateCustomer] = useState(false);
   const [showInvoicePreview, setShowInvoicePreview] = useState(false);
+  const [selectedSaleForInvoice, setSelectedSaleForInvoice] =
+    useState<Sale | null>(null);
   const [activeTab, setActiveTab] = useState("sale");
+
+  // إدارة الأصناف والفئات
+  const [showEditProduct, setShowEditProduct] = useState(false);
+  const [showEditCategory, setShowEditCategory] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteItem, setDeleteItem] = useState<{
+    type: "product" | "category";
+    id: string;
+    name: string;
+  } | null>(null);
   const [stats, setStats] = useState({
     totalSales: 0,
     totalRevenue: 0,
@@ -108,8 +125,17 @@ export default function SalesPage() {
   });
 
   useEffect(() => {
-    loadData();
+    // تهيئة البيانات الافتراضية أولاً
+    database.initializeDefaultData().then(() => {
+      // ثم تحميل البيانات
+      loadData();
+    });
   }, []);
+
+  // فحص حالة تحميل البيانات
+  useEffect(() => {
+    // يمكن إضافة منطق فحص البيانات هنا إذا لزم الأمر
+  }, [products, customers, sales]);
 
   const loadData = async () => {
     try {
@@ -307,6 +333,72 @@ export default function SalesPage() {
   const selectedCustomerData = customers.find((c) => c.id === selectedCustomer);
   const { subtotal, discount, taxAmount, total } = calculateTotal();
 
+  // طباعة معلومات التصحيح
+  console.log("العملاء المتاحون:", customers);
+  console.log("العميل المختار:", selectedCustomer);
+  console.log("بيانات العميل المختار:", selectedCustomerData);
+  console.log("المنتجات المختارة:", selectedProducts);
+
+  const openInvoicePreview = () => {
+    if (!selectedCustomer) {
+      alert("يرجى اختيار العميل أولاً");
+      return;
+    }
+    if (selectedProducts.length === 0) {
+      alert("يرجى إضافة منتجات أولاً");
+      return;
+    }
+
+    setSelectedSaleForInvoice(null); // مبيعة جديدة
+    setShowInvoicePreview(true);
+  };
+
+  const openSaleInvoice = (sale: Sale) => {
+    setSelectedSaleForInvoice(sale);
+    setShowInvoicePreview(true);
+  };
+
+  // دوال إدارة الأصناف والفئات
+  const handleEditProduct = (product: Product) => {
+    setEditingProduct(product);
+    setShowEditProduct(true);
+  };
+
+  const handleEditCategory = (category: Category) => {
+    setEditingCategory(category);
+    setShowEditCategory(true);
+  };
+
+  const handleDeleteProduct = (id: string, name: string) => {
+    setDeleteItem({ type: "product", id, name });
+    setShowDeleteConfirm(true);
+  };
+
+  const handleDeleteCategory = (id: string, name: string) => {
+    setDeleteItem({ type: "category", id, name });
+    setShowDeleteConfirm(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteItem) return;
+
+    try {
+      if (deleteItem.type === "product") {
+        await database.deleteProduct(deleteItem.id);
+        alert("تم حذف المنتج بنجاح");
+      } else {
+        await database.deleteCategory(deleteItem.id);
+        alert("تم حذف الفئة بنجاح");
+      }
+      loadData();
+    } catch (error) {
+      alert("حدث خطأ أثناء الحذف");
+    } finally {
+      setShowDeleteConfirm(false);
+      setDeleteItem(null);
+    }
+  };
+
   return (
     <MainLayout>
       <div className="space-y-6">
@@ -328,10 +420,7 @@ export default function SalesPage() {
               <User className="h-4 w-4 ml-2" />
               إضافة عميل
             </Button>
-            <Button
-              onClick={() => setShowInvoicePreview(true)}
-              variant="outline"
-            >
+            <Button onClick={openInvoicePreview} variant="outline">
               <Receipt className="h-4 w-4 ml-2" />
               معاينة الفاتورة
             </Button>
@@ -339,7 +428,11 @@ export default function SalesPage() {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div
+          className={`grid gap-4 mb-8 ${
+            isMobile ? "grid-cols-2" : "grid-cols-2 md:grid-cols-4"
+          }`}
+        >
           <Card className="stats-card">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
@@ -403,26 +496,34 @@ export default function SalesPage() {
           onValueChange={setActiveTab}
           className="space-y-6"
         >
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList
+            className={`grid w-full ${
+              isMobile ? "grid-cols-1" : "grid-cols-3"
+            }`}
+          >
             <TabsTrigger value="sale" className="flex items-center gap-2">
               <ShoppingCart className="h-4 w-4" />
-              إنشاء بيع
+              {isMobile ? "إنشاء بيع" : "إنشاء بيع"}
             </TabsTrigger>
             <TabsTrigger value="products" className="flex items-center gap-2">
               <Package className="h-4 w-4" />
-              الأصناف
+              {isMobile ? "الأصناف" : "الأصناف"}
             </TabsTrigger>
             <TabsTrigger value="history" className="flex items-center gap-2">
               <FileText className="h-4 w-4" />
-              تاريخ المبيعات
+              {isMobile ? "التاريخ" : "تاريخ المبيعات"}
             </TabsTrigger>
           </TabsList>
 
           {/* Create Sale Tab */}
           <TabsContent value="sale" className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div
+              className={`grid gap-6 ${
+                isMobile ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-3"
+              }`}
+            >
               {/* Products Selection */}
-              <div className="lg:col-span-2">
+              <div className={`${isMobile ? "w-full" : "lg:col-span-2"}`}>
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
@@ -444,12 +545,16 @@ export default function SalesPage() {
                       </div>
 
                       {/* Quick Category Filters */}
-                      <div className="flex flex-wrap gap-2">
+                      <div
+                        className={`flex flex-wrap gap-2 ${
+                          isMobile ? "justify-center" : ""
+                        }`}
+                      >
                         <Button
                           variant={searchTerm === "" ? "default" : "outline"}
                           size="sm"
                           onClick={() => setSearchTerm("")}
-                          className="text-xs"
+                          className={isMobile ? "text-xs px-2 py-1" : ""}
                         >
                           <Target className="h-3 w-3 ml-1" />
                           الكل
@@ -460,7 +565,7 @@ export default function SalesPage() {
                           }
                           size="sm"
                           onClick={() => setSearchTerm("خرسانة")}
-                          className="text-xs"
+                          className={isMobile ? "text-xs px-2 py-1" : ""}
                         >
                           <Building className="h-3 w-3 ml-1" />
                           خرسانة
@@ -471,7 +576,7 @@ export default function SalesPage() {
                           }
                           size="sm"
                           onClick={() => setSearchTerm("حديد")}
-                          className="text-xs"
+                          className={isMobile ? "text-xs px-2 py-1" : ""}
                         >
                           <HardHat className="h-3 w-3 ml-1" />
                           حديد
@@ -482,7 +587,7 @@ export default function SalesPage() {
                           }
                           size="sm"
                           onClick={() => setSearchTerm("أدوات")}
-                          className="text-xs"
+                          className={isMobile ? "text-xs px-2 py-1" : ""}
                         >
                           <Wrench className="h-3 w-3 ml-1" />
                           أدوات
@@ -772,7 +877,11 @@ export default function SalesPage() {
                             </Button>
                           </div>
 
-                          <div className="grid grid-cols-3 gap-2 text-xs">
+                          <div
+                            className={`grid gap-2 text-xs ${
+                              isMobile ? "grid-cols-1" : "grid-cols-3"
+                            }`}
+                          >
                             <div>
                               <Label className="text-xs">الكمية</Label>
                               <Input
@@ -866,12 +975,8 @@ export default function SalesPage() {
             <AdvancedProductManager
               products={products}
               onAddProduct={(product) => addProductToSale(product)}
-              onEditProduct={(product) => {
-                // يمكن إضافة منطق التعديل هنا
-              }}
-              onDeleteProduct={(id) => {
-                // يمكن إضافة منطق الحذف هنا
-              }}
+              onEditProduct={handleEditProduct}
+              onDeleteProduct={handleDeleteProduct}
               onViewProduct={(product) => {
                 // يمكن إضافة منطق العرض هنا
               }}
@@ -888,81 +993,96 @@ export default function SalesPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
+                <div
+                  className={`space-y-4 ${
+                    isMobile ? "space-y-3" : "space-y-4"
+                  }`}
+                >
                   {sales.slice(0, 10).map((sale) => (
                     <div
                       key={sale.id}
-                      className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors"
+                      className={`border rounded-lg hover:bg-muted/50 transition-colors ${
+                        isMobile ? "p-3" : "p-4"
+                      }`}
                     >
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-foreground">
-                          {sale.customer?.name || "عميل غير محدد"}
-                        </h3>
-                        <p className="text-sm text-muted-foreground">
-                          {new Date(sale.createdAt).toLocaleDateString("ar-LY")}
-                        </p>
-                        {sale.customer?.company && (
-                          <p className="text-xs text-muted-foreground">
-                            {sale.customer.company}
-                          </p>
-                        )}
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <div className="text-right">
-                          <div className="font-semibold text-foreground">
-                            {sale.finalTotal.toLocaleString()} د.ل
-                          </div>
-                          <Badge
-                            variant={
-                              sale.status === "completed"
-                                ? "default"
-                                : "secondary"
-                            }
+                      <div
+                        className={`${
+                          isMobile
+                            ? "flex-col space-y-2"
+                            : "flex items-center justify-between"
+                        }`}
+                      >
+                        <div className="flex-1">
+                          <h3
+                            className={`font-semibold text-foreground ${
+                              isMobile ? "text-sm" : "text-base"
+                            }`}
                           >
-                            {sale.status === "completed"
-                              ? "مكتمل"
-                              : sale.status === "pending"
-                              ? "قيد الانتظار"
-                              : "ملغي"}
-                          </Badge>
-                        </div>
-
-                        {/* زر عرض الفاتورة السريع */}
-                                                    <QuickInvoiceView
-                              saleData={{
-                                id: sale.id,
-                                createdAt: sale.createdAt,
-                                status: sale.status,
-                              }}
-                              customerData={sale.customer}
-                              products={[
-                                {
-                                  product: {
-                                    name: "منتج",
-                                    description: "وصف المنتج",
-                                    price: sale.finalTotal,
-                                    sku: "SKU-001",
-                                  },
-                                  quantity: 1,
-                                  customPrice: sale.finalTotal,
-                                },
-                              ]}
-                              totals={{
-                                subtotal: sale.finalTotal,
-                                discount: 0,
-                                taxAmount: 0,
-                                total: sale.finalTotal,
-                              }}
-                              saleConfig={{
-                                paymentMethod: "cash",
-                                taxRate: 15,
-                                terms: "30 days",
-                              }}
-                              className="bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100"
+                            {sale.customer?.name || "عميل غير محدد"}
+                          </h3>
+                          <p
+                            className={`text-muted-foreground ${
+                              isMobile ? "text-xs" : "text-sm"
+                            }`}
+                          >
+                            {new Date(sale.createdAt).toLocaleDateString(
+                              "ar-LY"
+                            )}
+                          </p>
+                          {sale.customer?.company && (
+                            <p
+                              className={`text-muted-foreground ${
+                                isMobile ? "text-xs" : "text-sm"
+                              }`}
                             >
-                              <Eye className="h-4 w-4 ml-1" />
-                              عرض الفاتورة
-                            </QuickInvoiceView>
+                              {sale.customer.company}
+                            </p>
+                          )}
+                        </div>
+                        <div
+                          className={`flex items-center gap-4 ${
+                            isMobile ? "flex-col items-start space-y-2" : ""
+                          }`}
+                        >
+                          <div className="text-right">
+                            <div
+                              className={`font-semibold text-foreground ${
+                                isMobile ? "text-base" : "text-lg"
+                              }`}
+                            >
+                              {sale.finalTotal.toLocaleString()} د.ل
+                            </div>
+                            <Badge
+                              variant={
+                                sale.status === "completed"
+                                  ? "default"
+                                  : "secondary"
+                              }
+                              className={isMobile ? "text-xs" : ""}
+                            >
+                              {sale.status === "completed"
+                                ? "مكتمل"
+                                : sale.status === "pending"
+                                ? "قيد الانتظار"
+                                : "ملغي"}
+                            </Badge>
+                          </div>
+
+                          {/* زر عرض الفاتورة السريع */}
+                          <Button
+                            size={isMobile ? "sm" : "default"}
+                            variant="outline"
+                            onClick={() => openSaleInvoice(sale)}
+                            className="bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100"
+                          >
+                            <Eye
+                              className={`${
+                                isMobile ? "h-3 w-3" : "h-4 w-4"
+                              } ml-1`}
+                            />
+                            {isMobile ? "عرض" : "عرض الفاتورة"}
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -975,12 +1095,22 @@ export default function SalesPage() {
         {/* Create Customer Modal */}
         {showCreateCustomer && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-            <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <Card
+              className={`w-full max-h-[90vh] overflow-y-auto ${
+                isMobile ? "max-w-sm mx-2" : "max-w-2xl"
+              }`}
+            >
               <CardHeader>
-                <CardTitle>إضافة عميل جديد</CardTitle>
+                <CardTitle className={isMobile ? "text-lg" : "text-xl"}>
+                  إضافة عميل جديد
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div
+                  className={`grid gap-4 ${
+                    isMobile ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2"
+                  }`}
+                >
                   <div>
                     <Label>اسم العميل *</Label>
                     <Input
@@ -1097,19 +1227,239 @@ export default function SalesPage() {
           </div>
         )}
 
-        {/* Invoice Preview Modal */}
-        <InvoicePreview
-          isOpen={showInvoicePreview}
-          onClose={() => setShowInvoicePreview(false)}
-          saleData={{
-            id: `SALE-${Date.now()}`,
-            createdAt: new Date().toISOString(),
-          }}
-          customerData={selectedCustomerData}
-          products={selectedProducts}
-          totals={calculateTotal()}
-          saleConfig={newSale}
-        />
+        {/* Invoice Preview for New Sales */}
+        {selectedCustomerData && !selectedSaleForInvoice && (
+          <InvoicePreview
+            isOpen={showInvoicePreview}
+            onClose={() => setShowInvoicePreview(false)}
+            saleData={{
+              id: `SALE-${Date.now()}`,
+              date: new Date().toISOString(),
+              customerId: selectedCustomer,
+              status: "completed",
+            }}
+            customerData={selectedCustomerData}
+            products={selectedProducts}
+            totals={calculateTotal()}
+            saleConfig={{
+              taxRate: newSale.taxRate,
+              currency: "د.ل",
+              companyInfo: {
+                name: "شركة الفهد للاستشارة الهندسية",
+                address: "طرابلس، ليبيا",
+                phone: "+218912345678",
+                email: "info@alfahad.ly",
+                website: "www.alfahad.ly",
+              },
+            }}
+          />
+        )}
+
+        {/* Edit Product Modal */}
+        {showEditProduct && editingProduct && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+            <Card
+              className={`w-full max-h-[90vh] overflow-y-auto ${
+                isMobile ? "max-w-sm mx-2" : "max-w-2xl"
+              }`}
+            >
+              <CardHeader>
+                <CardTitle className={isMobile ? "text-lg" : "text-xl"}>
+                  تعديل المنتج
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div
+                  className={`grid gap-4 ${
+                    isMobile ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2"
+                  }`}
+                >
+                  <div>
+                    <Label>اسم المنتج *</Label>
+                    <Input
+                      value={editingProduct.name}
+                      onChange={(e) =>
+                        setEditingProduct({
+                          ...editingProduct,
+                          name: e.target.value,
+                        })
+                      }
+                      placeholder="اسم المنتج"
+                    />
+                  </div>
+                  <div>
+                    <Label>السعر *</Label>
+                    <Input
+                      type="number"
+                      value={editingProduct.price}
+                      onChange={(e) =>
+                        setEditingProduct({
+                          ...editingProduct,
+                          price: parseFloat(e.target.value) || 0,
+                        })
+                      }
+                      placeholder="السعر"
+                    />
+                  </div>
+                  <div>
+                    <Label>المخزون</Label>
+                    <Input
+                      type="number"
+                      value={editingProduct.stock}
+                      onChange={(e) =>
+                        setEditingProduct({
+                          ...editingProduct,
+                          stock: parseInt(e.target.value) || 0,
+                        })
+                      }
+                      placeholder="المخزون"
+                    />
+                  </div>
+                  <div>
+                    <Label>SKU</Label>
+                    <Input
+                      value={editingProduct.sku || ""}
+                      onChange={(e) =>
+                        setEditingProduct({
+                          ...editingProduct,
+                          sku: e.target.value,
+                        })
+                      }
+                      placeholder="SKU"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <Label>الوصف</Label>
+                  <Textarea
+                    value={editingProduct.description}
+                    onChange={(e) =>
+                      setEditingProduct({
+                        ...editingProduct,
+                        description: e.target.value,
+                      })
+                    }
+                    placeholder="وصف المنتج..."
+                    rows={3}
+                  />
+                </div>
+                <div className="flex gap-2 justify-end">
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setShowEditProduct(false);
+                      setEditingProduct(null);
+                    }}
+                  >
+                    إلغاء
+                  </Button>
+                  <Button
+                    onClick={async () => {
+                      try {
+                        await database.updateProduct(
+                          editingProduct.id,
+                          editingProduct
+                        );
+                        alert("تم تحديث المنتج بنجاح");
+                        setShowEditProduct(false);
+                        setEditingProduct(null);
+                        loadData();
+                      } catch (error) {
+                        alert("حدث خطأ أثناء التحديث");
+                      }
+                    }}
+                  >
+                    حفظ التغييرات
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {/* Delete Confirmation Modal */}
+        {showDeleteConfirm && deleteItem && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+            <Card
+              className={`w-full ${isMobile ? "max-w-sm mx-2" : "max-w-md"}`}
+            >
+              <CardHeader>
+                <CardTitle className={isMobile ? "text-lg" : "text-xl"}>
+                  تأكيد الحذف
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className={isMobile ? "text-sm" : "text-base"}>
+                  هل أنت متأكد من حذف{" "}
+                  {deleteItem.type === "product" ? "المنتج" : "الفئة"}
+                  <strong>"{deleteItem.name}"</strong>؟
+                </p>
+                <p
+                  className={`text-muted-foreground ${
+                    isMobile ? "text-xs" : "text-sm"
+                  }`}
+                >
+                  لا يمكن التراجع عن هذا الإجراء.
+                </p>
+                <div
+                  className={`flex gap-2 justify-end ${
+                    isMobile ? "flex-col" : ""
+                  }`}
+                >
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setShowDeleteConfirm(false);
+                      setDeleteItem(null);
+                    }}
+                    className={isMobile ? "w-full" : ""}
+                  >
+                    إلغاء
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    onClick={confirmDelete}
+                    className={isMobile ? "w-full" : ""}
+                  >
+                    حذف
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {/* Invoice Preview for Saved Sales */}
+        {selectedSaleForInvoice && (
+          <InvoicePreview
+            isOpen={showInvoicePreview}
+            onClose={() => setShowInvoicePreview(false)}
+            saleData={selectedSaleForInvoice}
+            customerData={selectedSaleForInvoice.customer}
+            products={selectedSaleForInvoice.items.map((item) => ({
+              ...item.product,
+              quantity: item.quantity,
+              customPrice: item.price,
+            }))}
+            totals={{
+              subtotal: selectedSaleForInvoice.total,
+              discount: selectedSaleForInvoice.discount,
+              taxAmount: selectedSaleForInvoice.taxAmount,
+              total: selectedSaleForInvoice.finalTotal,
+            }}
+            saleConfig={{
+              taxRate: selectedSaleForInvoice.taxRate,
+              currency: "د.ل",
+              companyInfo: {
+                name: "شركة الفهد للاستشارة الهندسية",
+                address: "طرابلس، ليبيا",
+                phone: "+218912345678",
+                email: "info@alfahad.ly",
+                website: "www.alfahad.ly",
+              },
+            }}
+          />
+        )}
       </div>
     </MainLayout>
   );

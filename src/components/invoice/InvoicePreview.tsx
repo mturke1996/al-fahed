@@ -1,6 +1,7 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
+import { Badge } from "../ui/badge";
 import {
   X,
   Printer,
@@ -8,14 +9,15 @@ import {
   Mail,
   Phone,
   MapPin,
+  Building,
   Receipt,
   Package,
   User,
   FileText,
   Globe,
+  Award,
+  Shield,
 } from "lucide-react";
-import html2pdf from "html2pdf.js";
-import QRCode from "react-qr-code"; // 📌 npm install react-qr-code
 
 interface InvoicePreviewProps {
   isOpen: boolean;
@@ -38,28 +40,23 @@ export function InvoicePreview({
 }: InvoicePreviewProps) {
   if (!isOpen) return null;
 
-  const formatDate = (date: string) =>
-    new Date(date).toLocaleDateString("ar-LY");
+  const formatDate = (date: string) => {
+    return new Date(date).toLocaleDateString("ar-LY");
+  };
 
-  const handlePrint = () => window.print();
+  const handlePrint = () => {
+    window.print();
+  };
 
   const handleDownload = () => {
-    const element = document.getElementById("invoice-content");
-    const opt = {
-      margin: 0.3,
-      filename: "invoice.pdf",
-      image: { type: "jpeg", quality: 1 },
-      html2canvas: { scale: 3 },
-      jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
-    };
-    html2pdf().set(opt).from(element).save();
+    alert("سيتم إضافة ميزة التحميل قريباً");
   };
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
       <div className="w-full max-w-5xl max-h-[90vh] overflow-y-auto">
         <Card className="print:shadow-none print:border-0">
-          {/* Header Actions */}
+          {/* ===== Header ===== */}
           <CardHeader className="print:hidden">
             <div className="flex items-center justify-between">
               <CardTitle className="flex items-center gap-2">
@@ -73,7 +70,7 @@ export function InvoicePreview({
                 </Button>
                 <Button onClick={handleDownload} variant="outline" size="sm">
                   <Download className="h-4 w-4 ml-2" />
-                  تحميل PDF
+                  تحميل
                 </Button>
                 <Button onClick={onClose} variant="outline" size="sm">
                   <X className="h-4 w-4" />
@@ -82,158 +79,174 @@ export function InvoicePreview({
             </div>
           </CardHeader>
 
-          {/* Invoice Content */}
+          {/* ===== Invoice Content ===== */}
           <CardContent className="p-0">
             <div
               id="invoice-content"
-              className="bg-white text-gray-900 p-8 print:p-4 mx-auto"
+              className="bg-white text-gray-900 p-8 print:p-0"
               style={{ minHeight: "29.7cm", width: "21cm" }}
             >
-              {/* ===== HEADER ===== */}
+              {/* ===== Company Header ===== */}
               <div className="flex justify-between items-start mb-8 border-b-4 border-amber-600 pb-6">
-                {/* Company Info */}
                 <div className="flex items-center gap-6">
-                  <img
-                    src="/company-footer-logo.png"
-                    alt="logo"
-                    className="w-20 h-20 object-contain drop-shadow-md"
-                  />
+                  {/* Logo */}
+                  <div className="w-24 h-24 bg-gradient-to-br from-amber-400 via-amber-500 to-orange-500 rounded-2xl flex items-center justify-center shadow-lg">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-white">
+                        الفهد
+                      </div>
+                      <div className="text-xs text-amber-100">ALFAHED</div>
+                    </div>
+                  </div>
                   <div>
-                    <h1 className="text-4xl font-extrabold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
+                    <h1 className="text-3xl font-bold text-amber-700">
                       شركة الفهد
                     </h1>
-                    <p className="text-lg text-amber-700 font-semibold">
+                    <p className="text-lg text-gray-600">
                       للاستشارات الهندسية
                     </p>
-                    <div className="flex items-center gap-2 mt-1 text-sm text-gray-600">
-                      <MapPin className="h-4 w-4 text-amber-500" />
-                      <span>طرابلس، ليبيا</span>
-                    </div>
-                    <div className="flex items-center gap-4 mt-1 text-sm text-gray-600">
-                      <div className="flex items-center gap-2">
-                        <Phone className="h-4 w-4 text-amber-500" />
-                        <span>+218 21 XXX XXXX</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Mail className="h-4 w-4 text-amber-500" />
-                        <span>info@alfahed.ly</span>
-                      </div>
-                    </div>
                   </div>
                 </div>
 
-                {/* Invoice Meta */}
                 <div className="text-right">
                   <div className="text-5xl font-bold text-amber-700 mb-4">
                     فاتورة
                   </div>
-                  <div className="bg-gradient-to-r from-amber-50 to-orange-50 p-4 rounded-xl border border-amber-200 shadow-sm">
-                    <div className="mb-2">
+                  <div className="bg-amber-50 p-4 rounded-xl border">
+                    <p className="font-semibold text-gray-700">
                       رقم الفاتورة:{" "}
-                      <span className="font-bold text-xl text-amber-700">
+                      <span className="font-bold">
                         {saleData?.id?.slice(-8) || "INV-001"}
                       </span>
-                    </div>
-                    <div>
-                      تاريخ الإصدار:{" "}
-                      <span className="font-bold text-xl text-amber-700">
-                        {formatDate(new Date().toISOString())}
-                      </span>
-                    </div>
+                    </p>
+                    <p className="font-semibold text-gray-700 mt-2">
+                      تاريخ الإصدار: {formatDate(new Date().toISOString())}
+                    </p>
                   </div>
                 </div>
               </div>
 
-              {/* ===== Customer & Sale Info ===== */}
-              <div className="grid grid-cols-2 gap-8 mb-8">
-                <div className="bg-amber-50 p-5 rounded-xl border shadow-sm">
-                  <h3 className="text-lg font-bold text-amber-800 mb-3 flex items-center gap-2">
+              {/* ===== Parties Info ===== */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                {/* Customer */}
+                <div className="p-5 border rounded-xl shadow-sm bg-gradient-to-b from-white to-amber-50">
+                  <h3 className="text-lg font-bold text-amber-800 mb-3 flex items-center gap-2 border-b pb-2">
                     <User className="h-5 w-5 text-amber-600" />
-                    معلومات العميل
+                    العميل
                   </h3>
-                  <p className="font-bold text-lg">
-                    {customerData?.name || "اسم العميل"}
-                  </p>
-                  {customerData?.company && <p>{customerData.company}</p>}
-                  {customerData?.email && <p>{customerData.email}</p>}
-                  {customerData?.phone && <p>{customerData.phone}</p>}
-                  {customerData?.address && <p>{customerData.address}</p>}
+                  <div className="space-y-1 text-sm text-gray-700">
+                    <p className="font-semibold">
+                      {customerData?.name || "اسم العميل"}
+                    </p>
+                    {customerData?.company && <p>🏢 {customerData.company}</p>}
+                    {customerData?.email && <p>✉ {customerData.email}</p>}
+                    {customerData?.phone && <p>📞 {customerData.phone}</p>}
+                    {customerData?.address && <p>📍 {customerData.address}</p>}
+                  </div>
                 </div>
-                <div className="bg-orange-50 p-5 rounded-xl border shadow-sm">
-                  <h3 className="text-lg font-bold text-orange-800 mb-3 flex items-center gap-2">
-                    <Receipt className="h-5 w-5 text-orange-600" />
-                    تفاصيل البيع
+
+                {/* Company */}
+                <div className="p-5 border rounded-xl shadow-sm bg-gradient-to-b from-white to-orange-50">
+                  <h3 className="text-lg font-bold text-orange-800 mb-3 flex items-center gap-2 border-b pb-2">
+                    <Globe className="h-5 w-5 text-orange-600" />
+                    الشركة
                   </h3>
-                  <p>رقم البيع: {saleData?.id?.slice(-8) || "SALE-001"}</p>
-                  <p>تاريخ البيع: {formatDate(new Date().toISOString())}</p>
-                  <p>طريقة الدفع: {saleConfig?.paymentMethod}</p>
-                  {saleConfig?.deliveryDate && (
-                    <p>تاريخ التسليم: {formatDate(saleConfig.deliveryDate)}</p>
-                  )}
-                  <p>شروط الدفع: {saleConfig?.terms}</p>
+                  <div className="space-y-1 text-sm text-gray-700">
+                    <p className="font-semibold">
+                      شركة الفهد للاستشارات الهندسية
+                    </p>
+                    <p>📍 طرابلس، ليبيا</p>
+                    <p>📞 +218 21 XXX XXXX</p>
+                    <p>✉ info@alfahed.ly</p>
+                    <p>🌍 www.alfahed.ly</p>
+                  </div>
+                </div>
+
+                {/* Government */}
+                <div className="p-5 border rounded-xl shadow-sm bg-gradient-to-b from-white to-gray-50">
+                  <h3 className="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2 border-b pb-2">
+                    <FileText className="h-5 w-5 text-gray-600" />
+                    الجهة الحكومية
+                  </h3>
+                  <div className="space-y-1 text-sm text-gray-700">
+                    <p className="font-semibold">وزارة الاقتصاد والتجارة</p>
+                    <p>📍 طرابلس، ليبيا</p>
+                    <p>📞 +218 XX XXX XXXX</p>
+                    <p>✉ gov@example.ly</p>
+                    <p>🕘 الأحد - الخميس</p>
+                  </div>
                 </div>
               </div>
 
               {/* ===== Products Table ===== */}
               <div className="mb-8">
                 <h3 className="text-xl font-bold text-amber-700 mb-4 flex items-center gap-2">
-                  <Package className="h-6 w-6 text-amber-600" />
+                  <Package className="h-5 w-5 text-amber-600" />
                   المنتجات والخدمات
                 </h3>
-                <table className="w-full border rounded-lg overflow-hidden shadow">
-                  <thead className="bg-gradient-to-r from-amber-600 to-orange-600 text-white">
-                    <tr>
-                      <th className="px-4 py-3 text-right">المنتج/الخدمة</th>
-                      <th className="px-4 py-3">الكمية</th>
-                      <th className="px-4 py-3">السعر</th>
-                      <th className="px-4 py-3">الإجمالي</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {products.map((item, i) => (
-                      <tr
-                        key={i}
-                        className={i % 2 === 0 ? "bg-amber-50" : "bg-white"}
-                      >
-                        <td className="px-4 py-3">{item.product.name}</td>
-                        <td className="px-4 py-3 text-center">
-                          {item.quantity}
-                        </td>
-                        <td className="px-4 py-3 text-center">
-                          {(item.customPrice || item.product.price).toLocaleString()}{" "}
-                          د.ل
-                        </td>
-                        <td className="px-4 py-3 text-center font-bold">
-                          {(
-                            (item.customPrice || item.product.price) *
-                            item.quantity
-                          ).toLocaleString()}{" "}
-                          د.ل
-                        </td>
+                <div className="border rounded-xl overflow-hidden">
+                  <table className="w-full text-sm">
+                    <thead className="bg-amber-600 text-white">
+                      <tr>
+                        <th className="px-4 py-3 text-right">المنتج</th>
+                        <th className="px-4 py-3 text-center">الكمية</th>
+                        <th className="px-4 py-3 text-center">السعر</th>
+                        <th className="px-4 py-3 text-center">الإجمالي</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {products.map((item, index) => (
+                        <tr
+                          key={index}
+                          className={
+                            index % 2 === 0 ? "bg-white" : "bg-amber-50"
+                          }
+                        >
+                          {/* ✅ يظهر اسم المنتج المختار */}
+                          <td className="px-4 py-3 font-semibold text-gray-800">
+                            {item.product?.name || "—"}
+                          </td>
+                          <td className="px-4 py-3 text-center">
+                            {item.quantity}
+                          </td>
+                          <td className="px-4 py-3 text-center">
+                            {(item.customPrice || item.product?.price)?.toLocaleString()}{" "}
+                            د.ل
+                          </td>
+                          <td className="px-4 py-3 text-center font-bold">
+                            {(
+                              (item.customPrice || item.product?.price) *
+                              item.quantity
+                            ).toLocaleString()}{" "}
+                            د.ل
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
 
               {/* ===== Totals ===== */}
-              <div className="flex justify-end mb-8">
-                <div className="w-80 bg-gradient-to-br from-amber-50 to-orange-50 p-6 rounded-xl border shadow">
-                  <p className="flex justify-between">
+              <div className="flex justify-end mb-10">
+                <div className="w-80 bg-amber-50 p-6 rounded-xl border">
+                  <div className="flex justify-between mb-2">
                     <span>المجموع الفرعي:</span>
                     <span>{totals.subtotal.toLocaleString()} د.ل</span>
-                  </p>
+                  </div>
                   {totals.discount > 0 && (
-                    <p className="flex justify-between text-green-600">
+                    <div className="flex justify-between mb-2 text-green-600">
                       <span>الخصم:</span>
                       <span>-{totals.discount.toLocaleString()} د.ل</span>
-                    </p>
+                    </div>
                   )}
                   {totals.taxAmount > 0 && (
-                    <p className="flex justify-between text-amber-700">
-                      <span>الضريبة:</span>
+                    <div className="flex justify-between mb-2 text-amber-700">
+                      <span>
+                        الضريبة ({saleConfig?.taxRate || 15}%):
+                      </span>
                       <span>{totals.taxAmount.toLocaleString()} د.ل</span>
-                    </p>
+                    </div>
                   )}
                   <div className="border-t mt-3 pt-3 font-bold text-lg text-amber-800 flex justify-between">
                     <span>الإجمالي:</span>
@@ -242,23 +255,10 @@ export function InvoicePreview({
                 </div>
               </div>
 
-              {/* ===== Notes ===== */}
-              {saleConfig?.notes && (
-                <div className="mb-6">
-                  <h4 className="font-bold text-amber-800 mb-2 flex items-center gap-2">
-                    <FileText className="h-5 w-5 text-amber-600" />
-                    ملاحظات:
-                  </h4>
-                  <p className="bg-amber-100 p-3 rounded border border-amber-200">
-                    {saleConfig.notes}
-                  </p>
-                </div>
-              )}
-
               {/* ===== Footer ===== */}
-              <div className="mt-12 border-t pt-4">
-                <div className="flex flex-col md:flex-row items-center justify-between text-xs md:text-sm text-gray-600">
-                  {/* Left: Logo */}
+              <div className="mt-12 border-t pt-6">
+                <div className="flex flex-col md:flex-row items-center justify-between text-sm text-gray-600">
+                  {/* Logo small */}
                   <div className="flex items-center gap-2 mb-4 md:mb-0">
                     <img
                       src="/company-footer-logo.png"
@@ -270,24 +270,15 @@ export function InvoicePreview({
                     </span>
                   </div>
 
-                  {/* Center: Thanks */}
                   <div className="text-center text-amber-700 font-medium mb-4 md:mb-0">
-                    شكراً لثقتكم بنا
+                    منذ عام 2021، تقدم شركة الفهد خدمات استشارية واختبارية هندسية بمستوى احترافي في مختلف أنحاء ليبيا.
                   </div>
 
-                  {/* Right: Contact + QR */}
-                  <div className="flex items-center gap-3">
-                    <div className="text-right space-y-1 leading-snug">
-                      <p>طرابلس، ليبيا</p>
-                      <p>📞 +218 21 XXX XXXX</p>
-                      <p>✉ info@alfahed.ly</p>
-                      <p className="flex items-center gap-1 justify-end">
-                        <Globe className="h-3 w-3 text-amber-600" /> www.alfahed.ly
-                      </p>
-                    </div>
-                    <div className="bg-white p-1 rounded shadow">
-                      <QRCode value="https://www.alfahed.ly" size={50} />
-                    </div>
+                  <div className="text-right space-y-1">
+                    <p>طرابلس، ليبيا</p>
+                    <p>📞 +218 21 XXX XXXX</p>
+                    <p>✉ info@alfahed.ly</p>
+                    <p>🌍 www.alfahed.ly</p>
                   </div>
                 </div>
               </div>

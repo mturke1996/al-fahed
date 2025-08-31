@@ -126,41 +126,39 @@ export function InvoicePreview({
                 </div>
               </div>
 
-              {/* ===== Parties Info ===== */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-                {/* Customer */}
-                <div className="p-5 border rounded-xl shadow-sm bg-gradient-to-b from-white to-amber-50">
-                  <h3 className="text-lg font-bold text-amber-800 mb-3 flex items-center gap-2 border-b pb-2">
-                    <User className="h-5 w-5 text-amber-600" />
-                    العميل
-                  </h3>
-                  <div className="space-y-1 text-sm text-gray-700">
-                    <p className="font-semibold">
-                      {customerData?.name || "اسم العميل"}
-                    </p>
-                    {customerData?.company && <p>🏢 {customerData.company}</p>}
-                    {customerData?.email && <p>✉ {customerData.email}</p>}
-                    {customerData?.phone && <p>📞 {customerData.phone}</p>}
-                    {customerData?.address && <p>📍 {customerData.address}</p>}
-                  </div>
-                </div>
+{/* ===== Parties Info (Recipient / Our Company) ===== */}
+<div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+  {/* Recipient (عميل / شركة / جهة حكومية) */}
+  <div>
+    <h3 className="text-lg font-bold text-amber-800 mb-3 flex items-center gap-2 border-b border-gray-200 pb-2">
+      <User className="h-5 w-5 text-amber-600" />
+      الجهة المصدّر لها الفاتورة
+    </h3>
+    <div className="space-y-1 text-sm text-gray-700 leading-relaxed">
+      <p className="font-semibold text-base">
+        {customerData?.name || "اسم العميل / الشركة / الجهة الحكومية"}
+      </p>
+      {customerData?.company && <p>🏢 {customerData.company}</p>}
+      {customerData?.email && <p>✉ {customerData.email}</p>}
+      {customerData?.phone && <p>📞 {customerData.phone}</p>}
+      {customerData?.address && <p>📍 {customerData.address}</p>}
+    </div>
+  </div>
 
-                {/* Company */}
-                <div className="p-5 border rounded-xl shadow-sm bg-gradient-to-b from-white to-orange-50">
-                  <h3 className="text-lg font-bold text-orange-800 mb-3 flex items-center gap-2 border-b pb-2">
-                    <Globe className="h-5 w-5 text-orange-600" />
-                    الشركة
-                  </h3>
-                  <div className="space-y-1 text-sm text-gray-700">
-                    <p className="font-semibold">
-                      شركة الفهد للاستشارات الهندسية
-                    </p>
-                    <p>📍 طرابلس، ليبيا</p>
-                    <p>📞 +218 21 XXX XXXX</p>
-                    <p>✉ info@alfahed.ly</p>
-                    <p>🌍 www.alfahed.ly</p>
-                  </div>
-                </div>
+  {/* Our Company */}
+  <div>
+    <h3 className="text-lg font-bold text-orange-800 mb-3 flex items-center gap-2 border-b border-gray-200 pb-2">
+      <Building className="h-5 w-5 text-orange-600" />
+      شركة الفهد للاستشارات الهندسية
+    </h3>
+    <div className="space-y-1 text-sm text-gray-700 leading-relaxed">
+      <p>📍 طرابلس، ليبيا</p>
+      <p>📞 +218 21 XXX XXXX</p>
+      <p>✉ info@alfahed.ly</p>
+      <p>🌍 www.alfahed.ly</p>
+    </div>
+  </div>
+</div>
 
                 {/* Government */}
                 <div className="p-5 border rounded-xl shadow-sm bg-gradient-to-b from-white to-gray-50">
@@ -254,34 +252,36 @@ export function InvoicePreview({
                   </div>
                 </div>
               </div>
+               {/* ===== Footer ===== */}
+<div className="mt-12 border-t pt-6">
+  <div className="flex flex-col md:flex-row items-center justify-between text-sm text-gray-600">
+    {/* Logo small */}
+    <div className="flex items-center gap-2 mb-4 md:mb-0">
+      <img
+        src="/company-footer-logo.png"
+        alt="Company Logo"
+        className="w-10 h-10 object-contain"
+      />
+      <span className="font-semibold text-gray-700">
+        شركة الفهد للاستشارات الهندسية
+      </span>
+    </div>
 
-              {/* ===== Footer ===== */}
-              <div className="mt-12 border-t pt-6">
-                <div className="flex flex-col md:flex-row items-center justify-between text-sm text-gray-600">
-                  {/* Logo small */}
-                  <div className="flex items-center gap-2 mb-4 md:mb-0">
-                    <img
-                      src="/company-footer-logo.png"
-                      alt="Company Logo"
-                      className="w-10 h-10 object-contain"
-                    />
-                    <span className="font-semibold text-gray-700">
-                      شركة الفهد للاستشارات الهندسية
-                    </span>
-                  </div>
+    {/* New Tagline */}
+    <div className="text-center text-amber-700 font-medium mb-4 md:mb-0 max-w-md">
+      منذ عام 2021، تقدم شركة الفهد خدمات استشارية واختبارية هندسية
+      بمستوى احترافي في مختلف أنحاء ليبيا.
+    </div>
 
-                  <div className="text-center text-amber-700 font-medium mb-4 md:mb-0">
-                    منذ عام 2021، تقدم شركة الفهد خدمات استشارية واختبارية هندسية بمستوى احترافي في مختلف أنحاء ليبيا.
-                  </div>
-
-                  <div className="text-right space-y-1">
-                    <p>طرابلس، ليبيا</p>
-                    <p>📞 +218 21 XXX XXXX</p>
-                    <p>✉ info@alfahed.ly</p>
-                    <p>🌍 www.alfahed.ly</p>
-                  </div>
-                </div>
-              </div>
+    {/* Contact Info */}
+    <div className="text-right space-y-1">
+      <p>📍 طرابلس، ليبيا</p>
+      <p>📞 +218 21 XXX XXXX</p>
+      <p>✉ info@alfahed.ly</p>
+      <p>🌍 www.alfahed.ly</p>
+    </div>
+  </div>
+</div>
             </div>
           </CardContent>
         </Card>
